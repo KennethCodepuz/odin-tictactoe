@@ -1,9 +1,3 @@
-// Initialize and Display the board - DONE
-// Initialize the players - DONE
-// inser player marks in the board
-// check for available spaces in the board
-// switch between players
-// check for the winner
 
 function GameBoard() {
     const rows = 3;
@@ -33,6 +27,20 @@ function GameBoard() {
     }
 
     const printBoard = () => {
+        const gridContainer = document.querySelector('.grid-container');
+        
+        for(let row = 0; row < board.length; row++) {
+            for(let col = 0; col < board[row].length; col++) {
+                let gridItem = document.createElement('div');
+                gridItem.classList.add('grid');
+                gridItem.setAttribute('data-loc', `${row}-${col}`);
+                let gridButton = document.createElement('button');
+                gridButton.classList.add('grid-btn')
+                gridItem.appendChild(gridButton);
+                gridContainer.appendChild(gridItem)
+                console.log(gridItem);
+            }
+        }
         console.log(board);
     }
 
@@ -40,7 +48,11 @@ function GameBoard() {
     return {getBoard, printBoard, putMark};
 }
 
-function GameControl(player1 = 'Player One', player2 = 'Player Two') {
+function GameControl(player1, player2) {
+    if(player1 === '' && player2 === '') {
+        player1 = 'Player one';
+        player2 = 'Player two';
+    }
     const players = [
         {
             name: player1,
@@ -52,7 +64,18 @@ function GameControl(player1 = 'Player One', player2 = 'Player Two') {
         }
     ]
     let board = GameBoard();
-    board.printBoard();
+    const startBtn = document.getElementById('start-btn');
+    console.log(startBtn);
+    startBtn.addEventListener('click',() => {
+        board.printBoard();
+        const grid = document.querySelector('.players-grid');
+        grid.removeChild(document.getElementById('start-btn'));
+        const playerDisplay = document.createElement('p');
+        playerDisplay.classList.add('player-turn');
+        playerDisplay.innerHTML = `It's ${activePlayer.name}'s turn`;
+        grid.appendChild(playerDisplay);
+    })
+    
     let activePlayer = players[0];
 
     const switchPlayer = (currentPlayer) => {
@@ -60,7 +83,6 @@ function GameControl(player1 = 'Player One', player2 = 'Player Two') {
         return player;
     }
 
-    console.log(`It's ${activePlayer.name}'s turn`);
     const playTurn = (row, column) => {
         let playerMove;
         if (activePlayer) {
@@ -177,15 +199,13 @@ function diagonalChecks(board, mark) {
 
 
 
-const test = GameControl('Luck', 'Shy');
-test.playTurn(1, 1);
-test.playTurn(0, 0);
-test.playTurn(2, 2);
-test.playTurn(0, 2);
-test.playTurn(2, 1);
-test.playTurn(1, 0);
-test.playTurn(0, 1);
-test.playTurn(1, 2);
+function startGame(){
+    const player1 = document.getElementById('player1').value.trim();
+    const player2 = document.getElementById('player2').value.trim();
+    
+    const gameControl = GameControl(player1, player2);
+}
 
+startGame();
 
 
